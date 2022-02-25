@@ -1,0 +1,62 @@
+{% extends "base.html" %} 
+{% load staticfiles %}
+
+{% block title %} 
+profile
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h4>Profile</h4>
+    <hr>
+    <div class="row mt-2">
+        <div class="col-md-3">
+            <br>
+            {% if profile.profile_img %}
+                <img src="{{ profile.profile_img.url }}" alt="{{ profile.user }} profile image" style="max-width: 80%;" class="rounded border">
+            {% endif %}
+            <br>
+            <br>
+            <br>
+
+            <form method="post" action="." enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <strong>change avatar:</strong>
+                    <br>
+                    <input type="file" class="form-control-file" name="profile_img" id="profile_img">
+                    <br>
+                    <button type="submit" class="float-left btn btn-info">update</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-9 border-left border-light">
+            <br>
+            <div>
+                <strong>name:&nbsp;&nbsp;&nbsp;&nbsp;</strong>{{ user.username }}
+            </div>
+            <br>
+            <div>
+                <strong>email:&nbsp;&nbsp;&nbsp;&nbsp;</strong>{{ user.email }}
+            </div>
+            <br>
+            <div>
+                <strong>info：&nbsp;&nbsp;&nbsp;&nbsp;</strong>{{ profile.profile_info }}
+            </div>
+            <br>
+            <br>
+            <form method="post" action="." enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group ">
+                    <strong>Update info:</strong>
+                    <textarea class="form-control" id="profile_info" name="profile_info" rows="8">{{ profile.profile_info }}</textarea> 
+                    <br>
+                    <button type="submit" class="float-right btn btn-info">submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

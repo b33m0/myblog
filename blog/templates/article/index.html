@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %} 
+    Homepage 
+{% endblock title%}
+
+{% block content %}
+<div class="container">
+    <div class="float-right row mt-2">
+        <a class="nav-link dropdown-toggle" href="#" id="topicnavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <strong>Topic</strong></a>
+            
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% for topic in topics%}
+                    <a class="dropdown-item" href="{% url 'article:a_index' %}?search_t={{ topic }}">{{topic}}</a>
+            {% endfor %}
+        </div>
+
+        {% if not search_t %}
+        <strong>
+            <a class="nav-link" href="{% url 'article:a_index' %}?search={{ search }}">Latest</a>
+        </strong>
+        <strong>
+            <a class="nav-link" href="{% url 'article:a_index' %}?order=a_view_count&search={{ search }}">HOT</a>
+        </strong>
+        <form class="form-inline" >
+            <label class="sr-only">content</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" name="search" placeholder="search articles" required>
+        </form>
+        {% endif %}
+    </div>
+    <br>
+    <br>
+
+    <hr>
+    {% if search %}
+        {% if articles %}
+            <h4><span style="color: #264653;">"{{ search }}"</span>&nbsp;related results:</h4>
+            <hr>        
+        {% else %}
+            <h4>no<span style="color: #264653;">"{{ search }}"</span>result found.</h4>
+            <hr>
+        {% endif %}
+    {% endif %}
+
+    {% if search_t %}
+        <h4 class="text-center" style="color: #264653;">{{ search_t }}</h4>
+        <hr>
+    {% endif %}
+
+
+    <div class="row mt-2">
+        {% for article in articles %}
+        <div class="col-md-12 mb-4">
+                <h4>
+                    <a href="{% url 'article:a_detail' article.id %}" style="color: #1d3557;" >
+                        {{ article.a_title }}
+                    </a>
+                
+                {% if article.a_topic %}
+                <button type="button" class="float-right btn btn-sm mb-2"
+                {% if article.a_topic.t_name == 'daily' %}
+                    style='background-color: #ffadad; width: 70px'
+                {% elif article.a_topic.t_name == 'python' %}
+                    style='background-color: #ffd6a5; width: 70px'
+                {% elif article.a_topic.t_name == 'django' %}
+                    style='background-color: #caffbf; width: 70px'
+                {% endif %}
+                    >{{ article.a_topic }}
+                </button>
+                {% endif %}
+                </h4>
+                <br>
+                <div>
+                    <p style="color: #457b9d;">{{ article.a_content|slice:'150' }}...</p>
+                </div>
+
+                <p>
+                    <span>
+                        <small style="color: #386641;">
+                            view: {{ article.a_view_count }}
+                        </small>
+                        <small style="color: #6a994e;">
+                            posted: {{ article.a_created_time }}
+                        </small>
+                        <small style="color: #a7c957;">
+                            updated: {{ article.a_modified_time }}
+                        </small>
+
+                    </span>
+                </p>
+
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<!-- https://docs.djangoproject.com/en/2.1/topics/pagination/ -->
+<div class="pagination">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if articles.has_previous and articles.previous_page_number != 1 %}    
+                <a href="?page=1&order={{ order }}&search={{ search }}" >&laquo; 1</a>
+                <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}" ><</a>
+            {% else %}
+                <a href="?page=1&order={{ order }}&search={{ search }}" >&laquo; 1</a>
+                
+            {% endif %}
+            &nbsp;
+            <span class="current">{{ articles.number }} of {{ articles.paginator.num_pages }}</span>
+            &nbsp;
+            {% if articles.has_next and articles.next_page_number != articles.paginator.num_pages %}
+                <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}" >></a>
+                <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}" >{{ articles.paginator.num_pages }} &raquo;</a>
+            {% else %}
+                <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}" >{{ articles.paginator.num_pages }} &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock content %}

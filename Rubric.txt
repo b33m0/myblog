@@ -1,0 +1,35 @@
+Project: Personal blog
+
+Creating a rubric(5 points)
+(Approved by Professor Todd Sproull 11/10/21)
+
+Languages/Frameworks used (20 points)
+    20 - Learned/Used Django full-stack framework
+Functionality (55 points)
+    Account(10):
+        10 Users can register, login, and logout
+    Article(20):
+        5 Logged in Users can add articles
+        5 Logged in Users can modify articles
+        5 Logged in Users can delete articles
+        5 Logged in Users can comment on articles
+    Main page(25):
+        5 Each page would display fixed number of articles
+        5 Display the most recent/most viewed articles
+        10 Users can Search an article
+        5 Show the view amount of an article
+Best Practices (5 points)
+    3 Code is readable and well-formatted
+    2 All pages pass the HTML validator
+Creative Portion (15 points)
+    User profile management
+        User can upload a profile picture
+        User can upload a profile brief info
+    Topic management
+        Attach topic to each article
+        Display the articles by topics
+    Comment management
+        Show comment with its content, commenter and time
+        author of the ariticle can delete comment
+    Safety
+        (safe) delete article, by using csrf token. When delete, we submit a hidden post form

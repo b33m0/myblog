@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    Article
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-10">
+            <h1 class="mt-4 mb-4" style="color: #1d3557; font-size: 1.5em;">{{ article.a_title }}</h1>
+            {% if user == article.a_author %}
+                <div class="rounded border border-info" style="height: 140px">
+            {% else %}
+                <div class="rounded border border-info" style="height: 95px">
+            {% endif %}
+                    <p class="pt-2 pl-2" style="color: #1d3557; font-size: 1em;">
+                        {{ article.a_author }} 
+                    </p>
+                    <p class="pl-2 pb-2" style="color: #386641; font-size: 0.8em;">
+                    Published：{{ article.a_created_time }}  Updated：{{ article.a_modified_time }}
+                    <br>
+                    View: {{ article.a_view_count}}
+                    </p>
+                    
+                    {% if user == article.a_author %}
+                    <a class="pr-2 float-right" href="#" onclick="a_delete()">[delete]</a>
+                    <a class="pr-2 float-right" href="{% url 'article:a_modify' article.id %}">[modify]</a>
+                    <form style="display:none;" id="a_delete" action="{% url 'article:a_delete' article.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">send</button>
+                    </form>
+                    <script>
+                        function a_delete(){
+                            $('form#a_delete button').click();
+                        }
+                    </script>
+                    {% endif %}
+            </div>
+            <br>
+
+            <div style="color: #386641; font-size: 1em;">
+                    {{ article.a_content|safe }}
+            </div>
+            <br>
+            
+
+
+        
+            <div>
+                {% if comments %}
+                    <hr>
+                    <h4>Comments</h4>
+                    {% for comment in comments %}
+                        <hr>
+                            <strong style="color: grey; font-size: 0.8em;"> {{ comment.c_author }}</strong>
+                            <span>
+                                {% if user == article.a_author %}
+                                <a class="float-right" href="#" onclick="c_delete()">[delete]</a>
+                                <form style="display:none;" id="c_delete" action="{% url 'comment:c_delete' a_id=article.id c_id=comment.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit">send</button>
+                                </form>
+                                <script>
+                                    function c_delete(){
+                                        $('form#c_delete button').click();
+                                    }
+                                </script>
+                                {% endif %}
+                            </span>
+                            
+                            <div>
+                            <p style="font-size: 0.8em;"></p>
+                            
+                            <pre style="font-family: inherit; font-size: 1em; ">{{ comment.c_content }}</pre>
+
+                            <p style="color: grey; font-size: 0.8em;">
+                                {{ comment.c_time|date:"Y-m-d H:i:s" }}
+                            </p>
+                            </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <hr>
+            {% if user.is_authenticated %}
+                <div>
+                    <form 
+                        action="{% url 'comment:c_create' article.id %}" 
+                        method="POST"
+                    >
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label for="c_content">
+                                <strong>
+                                    add comment：
+                                </strong>
+                            </label>
+                            <textarea class="form-control" id="c_content" name="c_content" rows="2" ></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-info ">send</button>                    
+                    </form>
+                </div>
+                <br>
+            {% else %}
+
+                <div class="col-md-10">
+                <h5>
+                    <a href="{% url 'userprofile:login' %}">login first</a>
+                </h5>
+                <br>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-2">     
+            <h4><strong>outline</strong></h4>
+            <hr>
+            <div>
+                {{ toc|safe }}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}
+

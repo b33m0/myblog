@@ -1,0 +1,43 @@
+{% extends "base.html" %} 
+{% load staticfiles %}
+
+{% block title %}
+    post article
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <form method="post" action=".">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="a_title"><strong>Title</strong></label>
+                    <textarea class="form-control" id="a_title" name="a_title" rows="1"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="a_topic"><strong>Topic</strong></label>
+                    <select class="form-control" id="a_topic" name="a_topic">
+                        <option value="none">Select the topic</option>
+                        {% for topic in topics%}
+                        <option value="{{topic.id}}">{{topic}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="a_content"><strong>Content</strong></label>
+                    <textarea class="form-control" id="a_content" name="a_content" style="height:500px;"></textarea>
+                </div>
+
+                <button type="submit" class="float-right btn btn-info">Upload</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
